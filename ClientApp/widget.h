@@ -3,11 +3,12 @@
 
 #include <QWidget>
 #include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include "login.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class Widget;
-}
+namespace Ui { class Widget; }
 QT_END_NAMESPACE
 
 class Widget : public QWidget
@@ -18,9 +19,18 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
-private:
-    QLabel *imageLabel;
-    Ui::Widget *ui;
+private slots:
+    void onLoginClicked();
+    void onSignInClicked();
 
+private:
+    Ui::Widget *ui;
+    QLineEdit *idLineEdit;
+    QLineEdit *pwLineEdit;
+    QPushButton *loginButton;
+    QPushButton *signInButton;
+    login *loginWidget;
+
+    bool validateLogin(const QString &id, const QString &password);
 };
 #endif // WIDGET_H
