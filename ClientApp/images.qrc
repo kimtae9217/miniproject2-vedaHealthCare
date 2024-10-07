@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>images/healthcare.png</file>
+        <file>images/fitness.png</file>
+    </qresource>
+</RCC>

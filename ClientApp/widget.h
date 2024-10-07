@@ -2,6 +2,7 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include <QLabel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -18,6 +19,8 @@ public:
     ~Widget();
 
 private:
+    QLabel *imageLabel;
     Ui::Widget *ui;
+
 };
 #endif // WIDGET_H
