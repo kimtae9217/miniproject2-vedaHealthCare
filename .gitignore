@@ -1,3 +1,4 @@
+### Qt ###
 # C++ objects and libs
 *.slo
 *.lo
@@ -52,3 +53,8 @@ compile_commands.json
 *creator.user*
 
 *_qmlcache.qrc
+
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
