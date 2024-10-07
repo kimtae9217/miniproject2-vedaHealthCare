@@ -58,3 +58,6 @@ compile_commands.json
 ._.DS_Store
 **/.DS_Store
 **/._.DS_Store
+
+/ClientApp/build
+/ServerApp/build
