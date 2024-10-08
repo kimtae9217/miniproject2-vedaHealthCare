@@ -22,6 +22,7 @@ Widget::Widget(QWidget *parent)
     // 버튼 클릭 시 해당 함수 호출
     connect(loginButton, &QPushButton::clicked, this, &Widget::onLoginClicked);
     connect(signInButton, &QPushButton::clicked, this, &Widget::onSignInClicked);
+    connect(loginWidget, &login::backButtonClicked, this, &Widget::onLoginBackButtonClicked);
 }
 
 Widget::~Widget()
@@ -58,11 +59,22 @@ void Widget::onLoginClicked()
 
 void Widget::onSignInClicked()
 {
-    if (!loginWidget)
+    if (!loginWidget){
         loginWidget = new login();
+        connect(loginWidget, &login::backButtonClicked, this, &Widget::onLoginBackButtonClicked);
 
+    }
     loginWidget->show();
     this->hide();
+}
+
+void Widget::onLoginBackButtonClicked()
+{
+    // 로그인 위젯 숨기기
+    loginWidget->hide();
+
+    // 메인 위젯(현재 클래스) 보이기
+    this->show();
 }
 
 // bool Widget::validateLogin(const QString &id, const QString &password)

@@ -1,5 +1,5 @@
-#include "login.h"
-#include "ui_login.h"
+#include "signin.h"
+#include "ui_signin.h"
 #include <QMessageBox>
 #include <QPushButton>
 
@@ -11,6 +11,9 @@ login::login(QWidget *parent)
 
 
     connect(ui->signInButton, &QPushButton::clicked, this, &login::onRegisterClicked);
+
+    connect(ui->backButton, &QPushButton::clicked, this, &login::onBackButtonClicked);
+
 }
 
 login::~login()
@@ -41,4 +44,18 @@ void login::onRegisterClicked()
 
     QMessageBox::information(this, "회원가입 성공", "회원가입이 완료되었습니다.");
     this->close();
+}
+
+void login::onBackButtonClicked()
+{
+    // 입력 필드 초기화
+    ui->lineEdit->clear();
+    ui->lineEdit_2->clear();
+    ui->lineEdit_3->clear();
+    ui->lineEdit_4->clear();
+
+    // 뒤로가기 시그널 발생
+    emit backButtonClicked();
+
+    this->hide();
 }

@@ -5,7 +5,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-#include "login.h"
+#include "signin.h"
 #include "mainwindow.h"
 
 QT_BEGIN_NAMESPACE
@@ -23,6 +23,7 @@ public:
 private slots:
     void onLoginClicked();
     void onSignInClicked();
+    void onLoginBackButtonClicked();
 
 private:
     Ui::Widget *ui;

@@ -1,5 +1,5 @@
-#ifndef LOGIN_H
-#define LOGIN_H
+#ifndef SIGNIN_H
+#define SIGNIN_H
 
 #include <QWidget>
 
@@ -15,11 +15,15 @@ public:
     explicit login(QWidget *parent = nullptr);
     ~login();
 
+signals:
+    void backButtonClicked();
+
 private slots:
     void onRegisterClicked();
+    void onBackButtonClicked();
 
 private:
     Ui::login *ui;
 };
 
-#endif // LOGIN_H
+#endif // SIGNIN_H
