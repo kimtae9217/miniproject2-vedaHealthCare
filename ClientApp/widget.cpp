@@ -6,6 +6,7 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
     , loginWidget(nullptr)
+    , mainWindow(nullptr)
 {
     ui->setupUi(this);
 
@@ -28,6 +29,8 @@ Widget::~Widget()
     delete ui;
     if (loginWidget)
         delete loginWidget;
+    if (mainWindow)
+        delete mainWindow;
 }
 
 void Widget::onLoginClicked()
@@ -35,12 +38,22 @@ void Widget::onLoginClicked()
     QString id = idLineEdit->text();
     QString password = pwLineEdit->text();
 
-    if (validateLogin(id, password)) {
-        QMessageBox::information(this, "로그인 성공", "환영합니다, " + id + "님!");
-        // TODO: 로그인 성공 후 메인 화면으로 전환하는 코드 추가하기
-    } else {
-        QMessageBox::warning(this, "로그인 실패", "아이디 또는 비밀번호가 올바르지 않습니다.");
-    }
+    // if (validateLogin(id, password)) {
+    //     QMessageBox::information(this, "로그인 성공", "환영합니다, " + id + "님!");
+    //     // TODO: 로그인 성공 후 메인 화면으로 전환하는 코드 추가하기
+    // } else {
+    //     QMessageBox::warning(this, "로그인 실패", "아이디 또는 비밀번호가 올바르지 않습니다.");
+    // }
+
+    // 임시로 모든 로그인 시도를 성공으로 처리
+    QMessageBox::information(this, "로그인 성공", "환영합니다, " + id + "님!");
+
+    // MainWindow로 전환
+    if (!mainWindow)
+        mainWindow = new MainWindow();
+
+    mainWindow->show();
+    this->hide(); // 현재 로그인 창 숨기기
 }
 
 void Widget::onSignInClicked()
@@ -52,8 +65,8 @@ void Widget::onSignInClicked()
     this->hide();
 }
 
-bool Widget::validateLogin(const QString &id, const QString &password)
-{
-    // TODO: 실제 데이터베이스나 서버와의 통신을 통한 로그인 검증 로직으로 대체
-    return (id == "user" && password == "password");
-}
+// bool Widget::validateLogin(const QString &id, const QString &password)
+// {
+//     // TODO: 실제 데이터베이스나 서버와의 통신을 통한 로그인 검증 로직으로 대체
+//     return (id == "user" && password == "password");
+// }

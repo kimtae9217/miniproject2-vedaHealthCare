@@ -11,14 +11,17 @@ CONFIG += c++17
 SOURCES += \
     login.cpp \
     main.cpp \
+    mainwindow.cpp \
     widget.cpp
 
 HEADERS += \
     login.h \
+    mainwindow.h \
     widget.h
 
 FORMS += \
     login.ui \
+    mainwindow.ui \
     widget.ui
 
 # Default rules for deployment.

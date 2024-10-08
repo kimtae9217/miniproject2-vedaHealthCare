@@ -9,10 +9,8 @@ login::login(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // 회원가입 버튼 추가 및 연결
-    QPushButton *signInButton = new QPushButton("회원가입", this);
-    signInButton->setGeometry(140, 230, 113, 32);
-    connect(signInButton, &QPushButton::clicked, this, &login::onRegisterClicked);
+
+    connect(ui->signInButton, &QPushButton::clicked, this, &login::onRegisterClicked);
 }
 
 login::~login()
