@@ -1,6 +1,10 @@
 #include "widget.h"
-#include <QtWidgets>
+#include <QLabel>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QMessageBox>
 #include <QtNetwork>
+#include <QDebug>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent), tcpServer(nullptr)
@@ -21,7 +25,27 @@ Widget::Widget(QWidget *parent)
     setWindowTitle("Simple TCP Server");
 
     updateButtonStates();
+
 }
+
+QString Widget::getLocalIPAddress()
+{
+    QString ipAddress;
+    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+    // IPv4 주소 찾기
+    for (int i = 0; i < ipAddressesList.size(); ++i) {
+        if (ipAddressesList.at(i) != QHostAddress::LocalHost && ipAddressesList.at(i).toIPv4Address()) {
+            ipAddress = ipAddressesList.at(i).toString();
+            break;
+        }
+    }
+    // 만약 IPv4 주소를 찾지 못했다면, localhost를 사용
+    if (ipAddress.isEmpty())
+        ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
+
+    return ipAddress;
+}
+
 
 void Widget::startServer()
 {
@@ -37,6 +61,10 @@ void Widget::startServer()
 
     connect(tcpServer, &QTcpServer::newConnection, this, &Widget::clientConnect);
     statusLabel->setText("Server is running on port 8080");
+
+    QString localIP = getLocalIPAddress();
+    qDebug() << "Server started on" << localIP << ":" << tcpServer->serverPort();
+
     updateButtonStates();
 }
 
@@ -48,15 +76,42 @@ void Widget::stopServer()
         tcpServer = nullptr;
     }
     statusLabel->setText("Server is stopped");
+    qDebug("server stopped");
     updateButtonStates();
 }
 
 void Widget::clientConnect()
 {
-    QTcpSocket *clientConnection = tcpServer->nextPendingConnection();
-    connect(clientConnection, &QAbstractSocket::disconnected,
-            clientConnection, &QObject::deleteLater);
+    QTcpSocket *clientSocket = tcpServer->nextPendingConnection();
+    connect(clientSocket, &QAbstractSocket::disconnected,clientSocket, &QObject::deleteLater);
+    connect(clientSocket, &QAbstractSocket::disconnected,
+            [this, clientSocket]() { clientSockets.removeOne(clientSocket); });
+
+    clientSockets.append(clientSocket);
     statusLabel->setText("New client connected");
+    qDebug() << "New client connected";
+
+    sendServerInfo();
+}
+
+
+void Widget::sendServerInfo()
+{
+    QString ipAddress = getLocalIPAddress();
+
+    QByteArray data;
+    QDataStream out(&data, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_15);
+
+    out << QString("SERVER_INFO");
+    out << ipAddress;
+    out << tcpServer->serverPort();
+
+    for (QTcpSocket *socket : clientSockets) {
+        socket->write(data);
+    }
+
+    qDebug() << "Sent server info: IP" << ipAddress << ", Port" << tcpServer->serverPort();
 }
 
 void Widget::updateButtonStates()

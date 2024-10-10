@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTcpServer>
+#include <QTcpSocket>
 
 class QLabel;
 class QPushButton;
@@ -17,13 +18,16 @@ private slots:
     void startServer();
     void stopServer();
     void clientConnect();
+    void sendServerInfo();
 
 private:
     QLabel *statusLabel;
     QPushButton *startButton;
     QPushButton *stopButton;
     QTcpServer *tcpServer;
+    QList<QTcpSocket*> clientSockets;
     void updateButtonStates();
+    QString getLocalIPAddress();
 };
 
 #endif // WIDGET_H
