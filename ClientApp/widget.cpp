@@ -37,7 +37,7 @@ Widget::~Widget()
 void Widget::onLoginClicked()
 {
     QString id = idLineEdit->text();
-    QString password = pwLineEdit->text();
+    //QString password = pwLineEdit->text();
 
     // if (validateLogin(id, password)) {
     //     QMessageBox::information(this, "로그인 성공", "환영합니다, " + id + "님!");

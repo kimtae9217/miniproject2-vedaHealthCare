@@ -9,7 +9,6 @@ login::login(QWidget *parent)
 {
     ui->setupUi(this);
 
-
     connect(ui->signInButton, &QPushButton::clicked, this, &login::onRegisterClicked);
 
     connect(ui->backButton, &QPushButton::clicked, this, &login::onBackButtonClicked);
