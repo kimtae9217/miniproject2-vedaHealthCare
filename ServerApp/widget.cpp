@@ -30,6 +30,7 @@ Widget::Widget(QWidget *parent)
 
 QString Widget::getLocalIPAddress()
 {
+
     QString ipAddress;
     QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
     // IPv4 주소 찾기
@@ -44,6 +45,8 @@ QString Widget::getLocalIPAddress()
         ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
 
     return ipAddress;
+
+    //return "127.0.0.1";
 }
 
 
@@ -101,7 +104,7 @@ void Widget::sendServerInfo()
 
     QByteArray data;
     QDataStream out(&data, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_5_15);
+    out.setVersion(QDataStream::Qt_6_0);
 
     out << QString("SERVER_INFO");
     out << ipAddress;
