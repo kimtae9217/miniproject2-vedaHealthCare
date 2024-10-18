@@ -7,6 +7,7 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
     , loginWidget(nullptr)
     , mainWindow(nullptr)
+    , adminWindow(nullptr)
 {
     ui->setupUi(this);
 
@@ -32,12 +33,14 @@ Widget::~Widget()
         delete loginWidget;
     if (mainWindow)
         delete mainWindow;
+    if (adminWindow)
+        delete adminWindow;
 }
 
 void Widget::onLoginClicked()
 {
     QString id = idLineEdit->text();
-    //QString password = pwLineEdit->text();
+    QString password = pwLineEdit->text();
 
     // if (validateLogin(id, password)) {
     //     QMessageBox::information(this, "로그인 성공", "환영합니다, " + id + "님!");
@@ -49,11 +52,15 @@ void Widget::onLoginClicked()
     // 임시로 모든 로그인 시도를 성공으로 처리
     QMessageBox::information(this, "로그인 성공", "환영합니다, " + id + "님!");
 
-    // MainWindow로 전환
-    if (!mainWindow)
-        mainWindow = new MainWindow();
 
-    mainWindow->show();
+    // MainWindow로 전환
+    if (id == "123" && password == "123") {
+        adminWindow = new AdminWindow();
+        adminWindow->show();
+    } else {
+        mainWindow = new MainWindow();
+        mainWindow->show();
+    }
     this->hide(); // 현재 로그인 창 숨기기
 }
 

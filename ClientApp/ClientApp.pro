@@ -12,18 +12,21 @@ SOURCES += \
     adminwindow.cpp \
     main.cpp \
     mainwindow.cpp \
+    adminwindow.cpp \
     signin.cpp \
     widget.cpp
 
 HEADERS += \
     adminwindow.h \
     mainwindow.h \
+    adminwindow.h \
     signin.h \
     widget.h
 
 FORMS += \
     adminwindow.ui \
     mainwindow.ui \
+    adminwindow.ui \
     signin.ui \
     widget.ui
 
