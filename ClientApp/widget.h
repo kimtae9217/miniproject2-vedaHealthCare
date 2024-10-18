@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include "signin.h"
 #include "mainwindow.h"
+#include "adminwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -33,6 +34,8 @@ private:
     QPushButton *signInButton;
     login *loginWidget;
     MainWindow *mainWindow;
+    AdminWindow *adminWindow;
+
 
     bool validateLogin(const QString &id, const QString &password);
 };
