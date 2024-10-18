@@ -11,16 +11,19 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
+    adminwindow.cpp \
     signin.cpp \
     widget.cpp
 
 HEADERS += \
     mainwindow.h \
+    adminwindow.h \
     signin.h \
     widget.h
 
 FORMS += \
     mainwindow.ui \
+    adminwindow.ui \
     signin.ui \
     widget.ui
 
