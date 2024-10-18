@@ -25,6 +25,7 @@ private slots:
     void onLoginClicked();
     void onSignInClicked();
     void onLoginBackButtonClicked();
+    void onRegistrationSuccessful();
 
 private:
     Ui::Widget *ui;

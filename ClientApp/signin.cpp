@@ -2,16 +2,24 @@
 #include "ui_signin.h"
 #include <QMessageBox>
 #include <QPushButton>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QTcpSocket>
 
 login::login(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::login)
+    , tcpSocket(new QTcpSocket(this))
 {
     ui->setupUi(this);
 
     connect(ui->signInButton, &QPushButton::clicked, this, &login::onRegisterClicked);
-
     connect(ui->backButton, &QPushButton::clicked, this, &login::onBackButtonClicked);
+
+    // 서버 연결 설정
+    tcpSocket->connectToHost("localhost", 8080); // 서버 IP와 포트를 적절히 수정하세요
+    connect(tcpSocket, &QTcpSocket::connected, this, &login::onConnected);
+    connect(tcpSocket, &QTcpSocket::readyRead, this, &login::onReadyRead);
 
 }
 
@@ -39,10 +47,19 @@ void login::onRegisterClicked()
         return;
     }
 
-    // TODO: 실제 회원가입 로직 구현 필요 (데이터베이스에 저장 등)
+    // 서버로 데이터 전송
+    QJsonObject json;
+    json["type"] = "REGISTER";
+    json["email"] = email;
+    json["id"] = id;
+    json["password"] = password;
 
-    QMessageBox::information(this, "회원가입 성공", "회원가입이 완료되었습니다.");
-    this->close();
+    QJsonDocument doc(json);
+    QByteArray data = doc.toJson();
+
+    tcpSocket->write(data);
+    //QMessageBox::information(this, "회원가입 성공", "회원가입이 완료되었습니다.");
+    //this->close();
 }
 
 void login::onBackButtonClicked()
@@ -57,4 +74,27 @@ void login::onBackButtonClicked()
     emit backButtonClicked();
 
     this->hide();
+}
+
+void login::onConnected()
+{
+    qDebug() << "Connected to server";
+}
+
+void login::onReadyRead()
+{
+    QByteArray data = tcpSocket->readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonObject json = doc.object();
+
+    if (json["type"].toString() == "REGISTER_RESPONSE") {
+        bool success = json["success"].toBool();
+        if (success) {
+            QMessageBox::information(this, "회원가입 성공", "회원가입이 완료되었습니다.");
+            emit registrationSuccessful();  // 성공 시그널 발생
+            this->hide();
+        } else {
+            QMessageBox::warning(this, "회원가입 실패", "회원가입에 실패했습니다. 다시 시도해주세요.");
+        }
+    }
 }

@@ -69,7 +69,7 @@ void Widget::onSignInClicked()
     if (!loginWidget){
         loginWidget = new login();
         connect(loginWidget, &login::backButtonClicked, this, &Widget::onLoginBackButtonClicked);
-
+        connect(loginWidget, &login::registrationSuccessful, this, &Widget::onRegistrationSuccessful);
     }
     loginWidget->show();
     this->hide();
@@ -81,6 +81,12 @@ void Widget::onLoginBackButtonClicked()
     loginWidget->hide();
 
     // 메인 위젯(현재 클래스) 보이기
+    this->show();
+}
+
+void Widget::onRegistrationSuccessful()
+{
+    loginWidget->hide();
     this->show();
 }
 
