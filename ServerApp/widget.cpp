@@ -5,6 +5,9 @@
 #include <QMessageBox>
 #include <QtNetwork>
 #include <QDebug>
+#include <QtSql>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent), tcpServer(nullptr)
@@ -25,6 +28,10 @@ Widget::Widget(QWidget *parent)
     setWindowTitle("Simple TCP Server");
 
     updateButtonStates();
+
+    if (!initDatabase()) {
+        QMessageBox::critical(this, "Database Error", "Failed to initialize database.");
+    }
 
 }
 
@@ -86,9 +93,11 @@ void Widget::stopServer()
 void Widget::clientConnect()
 {
     QTcpSocket *clientSocket = tcpServer->nextPendingConnection();
-    connect(clientSocket, &QAbstractSocket::disconnected,clientSocket, &QObject::deleteLater);
+    connect(clientSocket, &QAbstractSocket::disconnected, clientSocket, &QObject::deleteLater);
     connect(clientSocket, &QAbstractSocket::disconnected,
             [this, clientSocket]() { clientSockets.removeOne(clientSocket); });
+    connect(clientSocket, &QTcpSocket::readyRead,
+            [this, clientSocket]() { processClientData(clientSocket); });
 
     clientSockets.append(clientSocket);
     statusLabel->setText("New client connected");
@@ -121,4 +130,64 @@ void Widget::updateButtonStates()
 {
     startButton->setEnabled(tcpServer == nullptr);
     stopButton->setEnabled(tcpServer != nullptr);
+}
+
+// 데이터베이스 연결 및 테이블 생성
+bool Widget::initDatabase()
+{
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+
+    // 경로 설정 필수
+    // MacOS는 경로설정을 해줘야 db가 저장됨
+    db.setDatabaseName("/Users/taewonkim/GitHub/miniproject2-vedaHealthCare/ServerApp/build/Qt_6_7_2_for_macOS-Debug/users.db");
+
+    if (!db.open()) {
+        qDebug() << "Error: connection with database failed";
+        return false;
+    }
+
+    QSqlQuery query;
+    query.exec("CREATE TABLE IF NOT EXISTS users "
+               "(id INTEGER PRIMARY KEY AUTOINCREMENT, "
+               "email TEXT, "
+               "username TEXT, "
+               "password TEXT)");
+
+    return true;
+}
+
+// 사용자 등록 함수
+bool Widget::registerUser(const QString &email, const QString &username, const QString &password)
+{
+    QSqlQuery query;
+    query.prepare("INSERT INTO users (email, username, password) "
+                  "VALUES (:email, :username, :password)");
+    query.bindValue(":email", email);
+    query.bindValue(":username", username);
+    query.bindValue(":password", password);
+
+    return query.exec();
+}
+
+// 클라이언트로부터 데이터를 받아 처리하는 함수
+void Widget::processClientData(QTcpSocket *clientSocket)
+{
+    QByteArray data = clientSocket->readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonObject json = doc.object();
+
+    if (json["type"].toString() == "REGISTER") {
+        QString email = json["email"].toString();
+        QString username = json["username"].toString();
+        QString password = json["password"].toString();
+
+        bool success = registerUser(email, username, password);
+
+        QJsonObject response;
+        response["type"] = "REGISTER_RESPONSE";
+        response["success"] = success;
+
+        QJsonDocument responseDoc(response);
+        clientSocket->write(responseDoc.toJson());
+    }
 }

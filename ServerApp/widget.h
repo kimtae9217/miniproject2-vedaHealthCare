@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QtSql>
 
 class QLabel;
 class QPushButton;
@@ -19,6 +20,9 @@ private slots:
     void stopServer();
     void clientConnect();
     void sendServerInfo();
+    bool initDatabase();
+    bool registerUser(const QString &email, const QString &username, const QString &password);
+    void processClientData(QTcpSocket *clientSocket);
 
 private:
     QLabel *statusLabel;
@@ -28,6 +32,7 @@ private:
     QList<QTcpSocket*> clientSockets;
     void updateButtonStates();
     QString getLocalIPAddress();
+    QSqlDatabase db;
 };
 
 #endif // WIDGET_H
