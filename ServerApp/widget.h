@@ -23,16 +23,18 @@ private slots:
     bool initDatabase();
     bool registerUser(const QString &email, const QString &username, const QString &password);
     void processClientData(QTcpSocket *clientSocket);
+    void sendMessageToClient(const QString& customerName, const QString& message);
 
 private:
     QLabel *statusLabel;
     QPushButton *startButton;
     QPushButton *stopButton;
     QTcpServer *tcpServer;
-    QList<QTcpSocket*> clientSockets;
+    // QList<QTcpSocket*> clientSockets;
     void updateButtonStates();
     QString getLocalIPAddress();
     QSqlDatabase db;
+    QMap<QString, QTcpSocket*> clientSockets;  // 고객 이름과 소켓을 매핑
 };
 
 #endif // WIDGET_H
