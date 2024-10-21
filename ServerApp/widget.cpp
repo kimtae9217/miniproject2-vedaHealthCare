@@ -8,6 +8,7 @@
 #include <QtSql>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QTcpSocket>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent), tcpServer(nullptr)
@@ -90,20 +91,50 @@ void Widget::stopServer()
     updateButtonStates();
 }
 
+// void Widget::clientConnect()
+// {
+//     QTcpSocket *clientSocket = tcpServer->nextPendingConnection();
+
+//     connect(clientSocket, &QAbstractSocket::disconnected, clientSocket, &QObject::deleteLater);
+//     connect(clientSocket, &QAbstractSocket::disconnected,
+//             [this, clientSocket]() { clientSockets.removeOne(clientSocket); });
+//     connect(clientSocket, &QTcpSocket::readyRead,
+//             [this, clientSocket]() { processClientData(clientSocket); });
+
+//     clientSockets.append(clientSocket);
+//     statusLabel->setText("New client connected");
+//     qDebug() << "New client connected";
+
+//     sendServerInfo();
+// }
+
 void Widget::clientConnect()
 {
     QTcpSocket *clientSocket = tcpServer->nextPendingConnection();
+
+    // 고객 이름을 포함한 클라이언트 식별 정보 받기
+    connect(clientSocket, &QTcpSocket::readyRead, [this, clientSocket]() {
+        QByteArray data = clientSocket->readAll();
+        QJsonDocument doc = QJsonDocument::fromJson(data);
+        QJsonObject json = doc.object();
+
+        if (json["type"].toString() == "REGISTER") {
+            QString customerName = json["username"].toString();
+            clientSockets[customerName] = clientSocket;  // 고객 이름을 통해 소켓을 저장
+
+            QJsonObject response;
+            response["type"] = "REGISTER_RESPONSE";
+            response["success"] = true;
+
+            QJsonDocument responseDoc(response);
+            clientSocket->write(responseDoc.toJson());
+
+            statusLabel->setText(customerName + " connected");
+            qDebug() << customerName << " connected";
+        }
+    });
+
     connect(clientSocket, &QAbstractSocket::disconnected, clientSocket, &QObject::deleteLater);
-    connect(clientSocket, &QAbstractSocket::disconnected,
-            [this, clientSocket]() { clientSockets.removeOne(clientSocket); });
-    connect(clientSocket, &QTcpSocket::readyRead,
-            [this, clientSocket]() { processClientData(clientSocket); });
-
-    clientSockets.append(clientSocket);
-    statusLabel->setText("New client connected");
-    qDebug() << "New client connected";
-
-    sendServerInfo();
 }
 
 
@@ -139,7 +170,7 @@ bool Widget::initDatabase()
 
     // 경로 설정 필수
     // MacOS는 경로설정을 해줘야 db가 저장됨
-    db.setDatabaseName("/Users/taewonkim/GitHub/miniproject2-vedaHealthCare/ServerApp/build/Qt_6_7_2_for_macOS-Debug/users.db");
+    db.setDatabaseName("/Users/jinurung/VEDA/Project/healthcare/vedahealthcare/miniproject2-vedaHealthCare/ServerApp/build/Qt_6_8_0_for_macOS-Debug//users.db");
 
     if (!db.open()) {
         qDebug() << "Error: connection with database failed";
@@ -189,5 +220,18 @@ void Widget::processClientData(QTcpSocket *clientSocket)
 
         QJsonDocument responseDoc(response);
         clientSocket->write(responseDoc.toJson());
+    }
+}
+
+void Widget::sendMessageToClient(const QString& customerName, const QString& message)
+{
+    if (clientSockets.contains(customerName)) {
+        QTcpSocket *socket = clientSockets[customerName];
+        QJsonObject json;
+        json["type"] = "MESSAGE";
+        json["message"] = message;
+
+        QJsonDocument doc(json);
+        socket->write(doc.toJson());
     }
 }

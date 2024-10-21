@@ -19,12 +19,15 @@ public:
 
 private slots:
     void on_customerList_itemClicked(QListWidgetItem *item); // 고객 이름 클릭
-    void on_customerList_itemDoubleClicked(QListWidgetItem *item); // 고객 이름 더블 클릭
+    void on_chatConnectButton_clicked();
+    void on_exitButton_clicked();  // 종료 버튼 클릭 시 호출될 슬롯
+
 
 private:
     Ui::AdminWindow *ui;
     void loadChatHistory(const QString& customerName);  // 채팅 내역 로드
-    void showCustomerInfo(const QString& customerName); // 고객 정보 표시
+    QString selectedCustomer;
+
 };
 
 #endif // ADMINWINDOW_H
