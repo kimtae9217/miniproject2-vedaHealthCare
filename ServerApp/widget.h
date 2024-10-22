@@ -21,7 +21,7 @@ private slots:
     void clientConnect();
     void sendServerInfo();
     bool initDatabase();
-    bool registerUser(const QString &email, const QString &username, const QString &password);
+    bool registerUser(const QString &name, const QString &age, const QString &email, const QString &userid, const QString &password);
     void processClientData(QTcpSocket *clientSocket);
     void sendMessageToClient(const QString& customerName, const QString& message);
 

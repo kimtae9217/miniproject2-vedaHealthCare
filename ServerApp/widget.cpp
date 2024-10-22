@@ -91,50 +91,17 @@ void Widget::stopServer()
     updateButtonStates();
 }
 
-// void Widget::clientConnect()
-// {
-//     QTcpSocket *clientSocket = tcpServer->nextPendingConnection();
-
-//     connect(clientSocket, &QAbstractSocket::disconnected, clientSocket, &QObject::deleteLater);
-//     connect(clientSocket, &QAbstractSocket::disconnected,
-//             [this, clientSocket]() { clientSockets.removeOne(clientSocket); });
-//     connect(clientSocket, &QTcpSocket::readyRead,
-//             [this, clientSocket]() { processClientData(clientSocket); });
-
-//     clientSockets.append(clientSocket);
-//     statusLabel->setText("New client connected");
-//     qDebug() << "New client connected";
-
-//     sendServerInfo();
-// }
 
 void Widget::clientConnect()
 {
     QTcpSocket *clientSocket = tcpServer->nextPendingConnection();
 
-    // 고객 이름을 포함한 클라이언트 식별 정보 받기
-    connect(clientSocket, &QTcpSocket::readyRead, [this, clientSocket]() {
-        QByteArray data = clientSocket->readAll();
-        QJsonDocument doc = QJsonDocument::fromJson(data);
-        QJsonObject json = doc.object();
-
-        if (json["type"].toString() == "REGISTER") {
-            QString customerName = json["username"].toString();
-            clientSockets[customerName] = clientSocket;  // 고객 이름을 통해 소켓을 저장
-
-            QJsonObject response;
-            response["type"] = "REGISTER_RESPONSE";
-            response["success"] = true;
-
-            QJsonDocument responseDoc(response);
-            clientSocket->write(responseDoc.toJson());
-
-            statusLabel->setText(customerName + " connected");
-            qDebug() << customerName << " connected";
-        }
-    });
-
     connect(clientSocket, &QAbstractSocket::disconnected, clientSocket, &QObject::deleteLater);
+    connect(clientSocket, &QTcpSocket::readyRead,
+            [this, clientSocket]() { processClientData(clientSocket); });
+
+    statusLabel->setText("New client connected");
+    qDebug() << "New client connected";
 }
 
 
@@ -170,7 +137,8 @@ bool Widget::initDatabase()
 
     // 경로 설정 필수
     // MacOS는 경로설정을 해줘야 db가 저장됨
-    db.setDatabaseName("/Users/jinurung/VEDA/Project/healthcare/vedahealthcare/miniproject2-vedaHealthCare/ServerApp/build/Qt_6_8_0_for_macOS-Debug//users.db");
+    //db.setDatabaseName("/Users/jinurung/VEDA/Project/healthcare/vedahealthcare/miniproject2-vedaHealthCare/ServerApp/build/Qt_6_8_0_for_macOS-Debug//users.db");
+    db.setDatabaseName("/Users/taewonkim/GitHub/miniproject2-vedaHealthCare/ServerApp/build/Qt_6_7_2_for_macOS-Debug/users.db");
 
     if (!db.open()) {
         qDebug() << "Error: connection with database failed";
@@ -180,24 +148,34 @@ bool Widget::initDatabase()
     QSqlQuery query;
     query.exec("CREATE TABLE IF NOT EXISTS users "
                "(id INTEGER PRIMARY KEY AUTOINCREMENT, "
+               "name TEXT, "
+               "age TEXT, "
                "email TEXT, "
-               "username TEXT, "
+               "userid TEXT, "
                "password TEXT)");
 
     return true;
 }
 
 // 사용자 등록 함수
-bool Widget::registerUser(const QString &email, const QString &username, const QString &password)
+bool Widget::registerUser(const QString &name, const QString &age, const QString &email, const QString &userid, const QString &password)
 {
     QSqlQuery query;
-    query.prepare("INSERT INTO users (email, username, password) "
-                  "VALUES (:email, :username, :password)");
+    query.prepare("INSERT INTO users (name, age, email, userid, password) "
+                  "VALUES (:name, :age, :email, :userid, :password)");
+    query.bindValue(":name", name);
+    query.bindValue(":age", age);
     query.bindValue(":email", email);
-    query.bindValue(":username", username);
+    query.bindValue(":userid", userid);
     query.bindValue(":password", password);
 
-    return query.exec();
+    bool success = query.exec();
+    if (!success) {
+        qDebug() << "SQL Error:" << query.lastError().text();
+    }
+    return success;
+
+    // return query.exec();
 }
 
 // 클라이언트로부터 데이터를 받아 처리하는 함수
@@ -207,12 +185,20 @@ void Widget::processClientData(QTcpSocket *clientSocket)
     QJsonDocument doc = QJsonDocument::fromJson(data);
     QJsonObject json = doc.object();
 
+    qDebug() << "Received data:" << doc.toJson();
+
     if (json["type"].toString() == "REGISTER") {
+        QString name = json["name"].toString();
+        QString age = json["age"].toString();
         QString email = json["email"].toString();
-        QString username = json["username"].toString();
+        QString userid = json["userid"].toString();
         QString password = json["password"].toString();
 
-        bool success = registerUser(email, username, password);
+        qDebug() << "Registering user:" << name << age << email << userid;
+
+        bool success = registerUser(name, age, email, userid, password);
+
+        qDebug() << "Registration" << (success ? "successful" : "failed");
 
         QJsonObject response;
         response["type"] = "REGISTER_RESPONSE";
