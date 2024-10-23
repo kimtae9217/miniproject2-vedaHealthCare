@@ -31,13 +31,15 @@ login::~login()
 void login::onRegisterClicked()
 {
     // 입력값 가져오기
-    QString email = ui->lineEdit->text();
-    QString id = ui->lineEdit_2->text();
-    QString password = ui->lineEdit_3->text();
-    QString confirmPassword = ui->lineEdit_4->text();
+    QString name = ui->nameEdit->text();
+    QString age = ui->ageEdit->text();
+    QString email = ui->emailEdit->text();
+    QString userid = ui->idEdit->text();
+    QString password = ui->pwEdit_1->text();
+    QString confirmPassword = ui->pwEdit_2->text();
 
     // 유효성 검사
-    if (email.isEmpty() || id.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+    if (name.isEmpty() || age.isEmpty() || email.isEmpty() || userid.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
         QMessageBox::warning(this, "입력 오류", "모든 필드를 입력해주세요.");
         return;
     }
@@ -50,8 +52,10 @@ void login::onRegisterClicked()
     // 서버로 데이터 전송
     QJsonObject json;
     json["type"] = "REGISTER";
+    json["name"] = name;
+    json["age"] = age;
     json["email"] = email;
-    json["id"] = id;
+    json["userid"] = userid;
     json["password"] = password;
 
     QJsonDocument doc(json);
@@ -65,10 +69,12 @@ void login::onRegisterClicked()
 void login::onBackButtonClicked()
 {
     // 입력 필드 초기화
-    ui->lineEdit->clear();
-    ui->lineEdit_2->clear();
-    ui->lineEdit_3->clear();
-    ui->lineEdit_4->clear();
+    ui->nameEdit->clear();
+    ui->ageEdit->clear();
+    ui->emailEdit->clear();
+    ui->idEdit->clear();
+    ui->pwEdit_1->clear();
+    ui->pwEdit_2->clear();
 
     // 뒤로가기 시그널 발생
     emit backButtonClicked();

@@ -38,6 +38,7 @@ private:
     AdminWindow *adminWindow;
 
 
+
     bool validateLogin(const QString &id, const QString &password);
 };
 #endif // WIDGET_H

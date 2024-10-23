@@ -20,7 +20,7 @@
       <x>20</x>
       <y>10</y>
       <width>341</width>
-      <height>511</height>
+      <height>471</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -29,17 +29,26 @@ font: 20pt &quot;Nanum Gothic&quot;;</string>
     </property>
     <item>
      <property name="text">
-      <string>김태원</string>
+      <string>지형근</string>
      </property>
      <property name="font">
       <font>
        <pointsize>20</pointsize>
       </font>
      </property>
+     <property name="background">
+      <brush brushstyle="NoBrush">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </property>
     </item>
     <item>
      <property name="text">
-      <string>지형근</string>
+      <string>김태원</string>
      </property>
      <property name="font">
       <font>
@@ -54,105 +63,35 @@ font: 20pt &quot;Nanum Gothic&quot;;</string>
       <x>410</x>
       <y>10</y>
       <width>351</width>
-      <height>511</height>
+      <height>471</height>
      </rect>
     </property>
    </widget>
-   <widget class="QWidget" name="customerInfoWidget" native="true">
+   <widget class="QPushButton" name="chatConnectButton">
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>130</y>
-      <width>171</width>
-      <height>181</height>
+      <y>500</y>
+      <width>100</width>
+      <height>32</height>
      </rect>
     </property>
-    <property name="palette">
-     <palette>
-      <active>
-       <colorrole role="Base">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>66</red>
-          <green>66</green>
-          <blue>66</blue>
-         </color>
-        </brush>
-       </colorrole>
-       <colorrole role="Window">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>39</red>
-          <green>39</green>
-          <blue>39</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </active>
-      <inactive>
-       <colorrole role="Base">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>66</red>
-          <green>66</green>
-          <blue>66</blue>
-         </color>
-        </brush>
-       </colorrole>
-       <colorrole role="Window">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>39</red>
-          <green>39</green>
-          <blue>39</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </inactive>
-      <disabled>
-       <colorrole role="Base">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>39</red>
-          <green>39</green>
-          <blue>39</blue>
-         </color>
-        </brush>
-       </colorrole>
-       <colorrole role="Window">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>39</red>
-          <green>39</green>
-          <blue>39</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </disabled>
-     </palette>
+    <property name="text">
+     <string>채팅 접속</string>
     </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
+   </widget>
+   <widget class="QPushButton" name="exitButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>500</y>
+      <width>100</width>
+      <height>32</height>
+     </rect>
     </property>
-    <property name="inputMethodHints">
-     <set>Qt::InputMethodHint::ImhNone</set>
+    <property name="text">
+     <string>종료</string>
     </property>
-    <widget class="QPushButton" name="closeButton">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>140</y>
-       <width>91</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>close</string>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

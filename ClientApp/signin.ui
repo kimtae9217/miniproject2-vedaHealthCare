@@ -13,21 +13,21 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="emailEdit">
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>140</y>
+     <y>170</y>
      <width>113</width>
      <height>21</height>
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="emailLabel">
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>140</y>
+     <y>170</y>
      <width>51</width>
      <height>16</height>
     </rect>
@@ -36,11 +36,11 @@
     <string>E-mail :</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="id_label">
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>160</y>
+     <y>190</y>
      <width>51</width>
      <height>16</height>
     </rect>
@@ -49,21 +49,21 @@
     <string>아이디 :</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_2">
+  <widget class="QLineEdit" name="idEdit">
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>160</y>
+     <y>190</y>
      <width>113</width>
      <height>21</height>
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="pwLabel_1">
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>180</y>
+     <y>210</y>
      <width>81</width>
      <height>20</height>
     </rect>
@@ -72,11 +72,11 @@
     <string>패스워드 입력 :</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_4">
+  <widget class="QLabel" name="pwLabel_2">
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>200</y>
+     <y>230</y>
      <width>91</width>
      <height>20</height>
     </rect>
@@ -85,21 +85,21 @@
     <string>패스워드 확인 : </string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_3">
+  <widget class="QLineEdit" name="pwEdit_1">
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>180</y>
+     <y>210</y>
      <width>113</width>
      <height>21</height>
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_4">
+  <widget class="QLineEdit" name="pwEdit_2">
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>200</y>
+     <y>230</y>
      <width>113</width>
      <height>21</height>
     </rect>
@@ -145,13 +145,59 @@
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>230</y>
+     <y>260</y>
      <width>100</width>
      <height>32</height>
     </rect>
    </property>
    <property name="text">
     <string>회원가입</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="nameEdit">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>130</y>
+     <width>113</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="nameLabel">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>130</y>
+     <width>51</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>이름 :</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="age_label">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>150</y>
+     <width>51</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>나이 :</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="ageEdit">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>150</y>
+     <width>113</width>
+     <height>21</height>
+    </rect>
    </property>
   </widget>
  </widget>
